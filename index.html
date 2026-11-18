@@ -20,18 +20,20 @@
 
   <style>
     :root {
-      --bg-deep: #020409;
-      --card-luxury: rgba(10, 15, 30, 0.85);
-      --border-subtle: rgba(255, 215, 0, 0.22);
-      --border-cyan: rgba(0, 240, 255, 0.28);
-      --gold-primary: #ffd700;
-      --gold-glow: rgba(255, 215, 0, 0.45);
-      --cyan: #00f0ff;
-      --cyan-glow: rgba(0, 240, 255, 0.5);
+      --bg-deep: #030712;
+      --card-luxury: rgba(8, 18, 38, 0.88);
+      --border-subtle: rgba(82, 147, 255, 0.24);
+      --border-cyan: rgba(91, 199, 255, 0.3);
+      --gold-primary: #78aaff;
+      --gold-glow: rgba(38, 113, 255, 0.42);
+      --cyan: #91e2ff;
+      --cyan-glow: rgba(62, 187, 255, 0.46);
+      --neon-cyan: var(--cyan);
+      --glow-cyan: 0 0 16px var(--cyan-glow);
       --crimson: #ff3366;
       --emerald: #00f59b;
       --text-hero: #ffffff;
-      --text-muted: #94a3b8;
+      --text-muted: #a7b6cc;
     }
 
     * {
@@ -43,6 +45,9 @@
 
     body {
       background-color: var(--bg-deep);
+      background-image:
+        radial-gradient(ellipse at 18% 44%, rgba(12, 49, 103, 0.2), transparent 42%),
+        radial-gradient(ellipse at 83% 63%, rgba(8, 40, 82, 0.22), transparent 38%);
       color: var(--text-hero);
       font-family: 'Space Grotesk', -apple-system, sans-serif;
       min-height: 100vh;
@@ -51,6 +56,25 @@
       align-items: center;
       overflow-x: hidden;
       position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 18% -10% -12%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='420' viewBox='0 0 1200 420'%3E%3Cpath d='M-80 120 C120 30 220 205 420 120 S720 35 920 120 1220 205 1360 115' fill='none' stroke='%234b91ed' stroke-opacity='.62' stroke-width='2'/%3E%3Cpath d='M-80 180 C120 90 220 265 420 180 S720 95 920 180 1220 265 1360 175' fill='none' stroke='%2391e2ff' stroke-opacity='.35' stroke-width='1.5'/%3E%3Cpath d='M-80 250 C120 160 220 335 420 250 S720 165 920 250 1220 335 1360 245' fill='none' stroke='%232d69bb' stroke-opacity='.55' stroke-width='2'/%3E%3C/svg%3E");
+      background-size: 1200px 420px;
+      background-repeat: repeat-x;
+      mask-image: linear-gradient(transparent, #000 18%, #000 78%, transparent);
+      animation: seaDrift 32s linear infinite alternate;
+    }
+
+    @keyframes seaDrift {
+      from { background-position: 0 0; transform: translate3d(-1.5%, 0, 0); }
+      to { background-position: 1200px 0; transform: translate3d(1.5%, -2%, 0); }
     }
 
     #particleCanvas {
@@ -66,7 +90,7 @@
     #preloader {
       position: fixed;
       inset: 0;
-      background: #010206;
+      background: #030712;
       z-index: 100000;
       display: flex;
       flex-direction: column;
@@ -124,7 +148,7 @@
       background: rgba(255, 255, 255, 0.08);
       border-radius: 4px;
       overflow: hidden;
-      border: 1px solid rgba(0, 240, 255, 0.2);
+      border: 1px solid rgba(91, 199, 255, 0.2);
     }
 
     .boot-bar-fill {
@@ -147,7 +171,7 @@
       z-index: 1000;
       width: 95%;
       max-width: 1240px;
-      background: rgba(8, 12, 24, 0.9);
+      background: rgba(5, 13, 30, 0.92);
       border: 1px solid var(--border-subtle);
       border-radius: 16px;
       backdrop-filter: blur(20px);
@@ -155,7 +179,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(82, 147, 255, 0.2);
     }
 
     .nav-brand {
@@ -168,7 +192,7 @@
     .brand-crest {
       width: 32px;
       height: 32px;
-      background: linear-gradient(135deg, var(--gold-primary), #ff9900);
+      background: linear-gradient(135deg, #78aaff, #174b9b);
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -217,12 +241,46 @@
     .nav-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .theme-picker {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 11px;
+      background: rgba(2, 7, 18, 0.72);
+    }
+
+    .theme-choice {
+      width: 25px;
+      height: 25px;
+      padding: 0;
+      border: 2px solid rgba(255,255,255,.28);
+      border-radius: 7px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.24);
+      transition: transform .18s, border-color .18s, box-shadow .18s;
+    }
+
+    .theme-choice:hover { transform: translateY(-2px); }
+    .theme-choice[aria-pressed="true"] { border-color: var(--cyan);box-shadow:0 0 0 2px rgba(91,199,255,.28),0 0 12px var(--cyan-glow); }
+    .theme-choice[data-theme="black"] { background:#05070c; }
+    .theme-choice[data-theme="white"] { background:#fff; }
+    .theme-choice[data-theme="sea"] { background:linear-gradient(155deg,#d9f6ff 0 28%,#297dcc 29% 56%,#061a3a 57%); }
+    .theme-choice:focus-visible { outline:2px solid var(--cyan);outline-offset:3px; }
+
+    @media (max-width: 520px) {
+      .nav-controls { gap:6px; }
+      .theme-picker { gap:3px;padding:4px; }
+      .theme-choice { width:21px;height:21px;border-radius:6px; }
+      .audio-btn { width:34px;height:34px; }
     }
 
     .audio-btn {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 215, 0, 0.3);
+      border: 1px solid rgba(82, 147, 255, 0.3);
       color: var(--gold-primary);
       width: 38px;
       height: 38px;
@@ -242,7 +300,7 @@
     }
 
     .btn-luxury {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+      background: linear-gradient(135deg, rgba(63, 130, 235, 0.2), rgba(21, 54, 105, 0.16));
       border: 1px solid var(--gold-primary);
       color: var(--gold-primary);
       padding: 10px 22px;
@@ -399,7 +457,7 @@
       height: 350px;
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 50px rgba(255, 215, 0, 0.08), 0 12px 30px rgba(0, 0, 0, 0.6);
+      box-shadow: inset 0 0 50px rgba(68, 139, 255, 0.12), 0 12px 30px rgba(0, 0, 0, 0.6);
       cursor: grab;
     }
 
@@ -420,7 +478,7 @@
       background: rgba(0, 0, 0, 0.6);
       padding: 4px 8px;
       border-radius: 4px;
-      border: 1px solid rgba(0, 240, 255, 0.2);
+      border: 1px solid rgba(91, 199, 255, 0.2);
       pointer-events: none;
     }
 
@@ -452,7 +510,7 @@
 
     .chip-btn {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 215, 0, 0.2);
+      border: 1px solid rgba(82, 147, 255, 0.22);
       color: var(--text-muted);
       padding: 6px 12px;
       border-radius: 6px;
@@ -471,7 +529,7 @@
     }
 
     .play-3d-btn {
-      background: rgba(0, 240, 255, 0.1);
+      background: rgba(55, 145, 226, 0.16);
       border: 1px solid var(--cyan);
       color: var(--cyan);
       padding: 6px 14px;
@@ -643,7 +701,7 @@
       padding: 4px 8px;
       border-radius: 4px;
       background: rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(255, 215, 0, 0.3);
+      border: 1px solid rgba(82, 147, 255, 0.3);
       color: var(--gold-primary);
     }
 
@@ -806,6 +864,10 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
+      body::before {
+        animation: none;
+      }
+
       .project-card,
       .project-image {
         transition: none;
@@ -942,7 +1004,7 @@
 
     .social-tag {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 215, 0, 0.25);
+      border: 1px solid rgba(82, 147, 255, 0.25);
       color: var(--gold-primary);
       padding: 6px 14px;
       border-radius: 20px;
@@ -1151,8 +1213,8 @@
     }
 
     .prompt-chip {
-      background: rgba(0, 240, 255, 0.08);
-      border: 1px solid rgba(0, 240, 255, 0.25);
+      background: rgba(55, 145, 226, 0.12);
+      border: 1px solid rgba(91, 199, 255, 0.26);
       color: var(--cyan);
       padding: 4px 10px;
       border-radius: 6px;
@@ -1191,14 +1253,14 @@
     }
 
     .bubble.bot {
-      background: rgba(0, 240, 255, 0.08);
+      background: rgba(55, 145, 226, 0.12);
       border-left: 3px solid var(--cyan);
       color: #e2e8f0;
       align-self: flex-start;
     }
 
     .bubble.user {
-      background: rgba(255, 215, 0, 0.12);
+      background: rgba(49, 112, 205, 0.22);
       border-right: 3px solid var(--gold-primary);
       color: #fff;
       align-self: flex-end;
@@ -1280,7 +1342,7 @@
     }
 
     .dispatch-btn {
-      background: linear-gradient(135deg, var(--gold-primary), #ff9900);
+      background: linear-gradient(135deg, #78aaff, #174b9b);
       color: #020409;
       border: none;
       padding: 16px;
@@ -1447,7 +1509,7 @@
 
     .submit-auth {
       width: 100%;
-      background: rgba(255, 215, 0, 0.1);
+      background: rgba(49, 112, 205, 0.15);
       border: 1px solid var(--border-subtle);
       color: var(--text-muted);
       padding: 14px;
@@ -1501,7 +1563,7 @@
     }
 
     .btn-logout {
-      background: rgba(255, 215, 0, 0.15);
+      background: rgba(49, 112, 205, 0.2);
       border: 1px solid var(--gold-primary);
       color: var(--gold-primary);
       padding: 12px;
@@ -1535,6 +1597,109 @@
       color: #fff;
       box-shadow: 0 0 15px var(--crimson);
     }
+
+    body[data-theme="black"] {
+      --bg-deep: #030405;
+      --card-luxury: rgba(12, 15, 21, .94);
+      --border-subtle: rgba(89, 153, 255, .26);
+      background-color: #030405;
+      background-image: radial-gradient(ellipse at 50% 45%, rgba(15, 44, 91, .12), transparent 58%);
+    }
+
+    body[data-theme="black"]::before { opacity:.1; }
+
+    body[data-theme="white"] {
+      --bg-deep: #f4f7fc;
+      --card-luxury: rgba(255,255,255,.94);
+      --border-subtle: rgba(30,75,130,.2);
+      --border-cyan: rgba(33,111,164,.28);
+      --gold-primary: #235fa8;
+      --gold-glow: rgba(35,95,168,.2);
+      --cyan: #167ba8;
+      --cyan-glow: rgba(22,123,168,.2);
+      --text-hero: #132238;
+      --text-muted: #52647a;
+      color:var(--text-hero);
+      background-color:#f4f7fc;
+      background-image:radial-gradient(ellipse at 18% 44%,rgba(83,144,210,.12),transparent 42%),radial-gradient(ellipse at 83% 63%,rgba(112,179,220,.13),transparent 38%);
+    }
+
+    body[data-theme="white"]::before { opacity:.12; }
+    body[data-theme="white"] #particleCanvas { opacity:.24; }
+    body[data-theme="white"] nav,
+    body[data-theme="white"] .nav-controls .theme-picker,
+    body[data-theme="white"] .hero-luxury,
+    body[data-theme="white"] .metric-card,
+    body[data-theme="white"] .marquee-shell,
+    body[data-theme="white"] .showcase-card,
+    body[data-theme="white"] .project-card,
+    body[data-theme="white"] .step-card,
+    body[data-theme="white"] .review-card,
+    body[data-theme="white"] .card,
+    body[data-theme="white"] .faq-item,
+    body[data-theme="white"] .service-card,
+    body[data-theme="white"] .modal-card {
+      background-color:rgba(255,255,255,.94);
+      color:var(--text-hero);
+      box-shadow:0 12px 35px rgba(17,42,73,.1);
+    }
+    body[data-theme="white"] nav { background:rgba(255,255,255,.94); }
+    body[data-theme="white"] .brand-title,
+    body[data-theme="white"] .hero-lead h1,
+    body[data-theme="white"] .step-title,
+    body[data-theme="white"] .review-quote,
+    body[data-theme="white"] .bio-box,
+    body[data-theme="white"] .faq-question,
+    body[data-theme="white"] .svc-title,
+    body[data-theme="white"] .showcase-title,
+    body[data-theme="white"] .modal-head h3,
+    body[data-theme="white"] .service-detail-title,
+    body[data-theme="white"] .profile-info-row,
+    body[data-theme="white"] .profile-info-box {
+      color:var(--text-hero);
+    }
+    body[data-theme="white"] .hero-lead h1 span {
+      background:linear-gradient(135deg,#132238,#235fa8);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:none;
+    }
+    body[data-theme="white"] .bio-box strong { color:#102b4c; }
+    body[data-theme="white"] .step-card,
+    body[data-theme="white"] .review-card,
+    body[data-theme="white"] .faq-item,
+    body[data-theme="white"] .service-card { border-color:var(--border-subtle); }
+    body[data-theme="white"] .step-card,
+    body[data-theme="white"] .review-card,
+    body[data-theme="white"] .faq-item,
+    body[data-theme="white"] .service-card { background:rgba(255,255,255,.88); }
+    body[data-theme="white"] .chip-btn,
+    body[data-theme="white"] .social-tag {
+      background:rgba(31,83,140,.06);
+      color:var(--gold-primary);
+    }
+    body[data-theme="white"] .chip-btn.active,
+    body[data-theme="white"] .chip-btn:hover,
+    body[data-theme="white"] .social-tag:hover { color:#fff;background:var(--gold-primary); }
+    body[data-theme="white"] .neural-hud-bar,
+    body[data-theme="white"] .chat-display,
+    body[data-theme="white"] .chat-inputs input,
+    body[data-theme="white"] .scope-options-box,
+    body[data-theme="white"] .order-grid input,
+    body[data-theme="white"] .order-grid select,
+    body[data-theme="white"] .order-grid textarea,
+    body[data-theme="white"] .input-slot input,
+    body[data-theme="white"] .profile-info-box {
+      background:#eef3f9;
+      color:var(--text-hero);
+      border-color:var(--border-subtle);
+    }
+    body[data-theme="white"] .bubble.bot { color:#233b58;background:#e4eff8; }
+    body[data-theme="white"] .bubble.user { color:#173451;background:#dcecff; }
+    body[data-theme="white"] .neural-pulse-badge { color:#17658f; }
+    body[data-theme="white"] .modal-veil { background:rgba(17,32,51,.55); }
+    body[data-theme="white"] .mode-chip { color:#43566d;background:#fff; }
+    body[data-theme="white"] .mode-chip.active { color:#fff;background:var(--cyan); }
   </style>
 </head>
 <body>
@@ -1567,6 +1732,11 @@
     </ul>
 
     <div class="nav-controls">
+      <div class="theme-picker" role="group" aria-label="Choose website theme">
+        <button class="theme-choice" type="button" data-theme="black" aria-label="Black theme" title="Black" aria-pressed="false"></button>
+        <button class="theme-choice" type="button" data-theme="white" aria-label="White theme" title="White" aria-pressed="false"></button>
+        <button class="theme-choice" type="button" data-theme="sea" aria-label="Sea blue theme" title="Sea blue" aria-pressed="true"></button>
+      </div>
       <button class="audio-btn" id="audioToggle" onclick="toggleAudioFx()" title="Tactile Audio FX">🔊</button>
 
       <div class="auth-box">
@@ -1586,7 +1756,7 @@
     <section class="hero-luxury">
       <div class="hero-lead">
         <div class="status-flag">APK INDUSTRIES // LUXURY ASSET SUITE</div>
-        <h1>Sculpting <span>Digital Gold</span> & 3D Reality</h1>
+        <h1>Sculpting <span>Digital Depth</span> & 3D Reality</h1>
         <p class="hero-motto">
           "We are not the <span>Future</span>, we are <strong>Growing Future</strong>" — Bespoke hard-surface 3D topology, Cycles metallic shaders, and automated client pipelines.
         </p>
@@ -1603,9 +1773,10 @@
         <div class="viewport-controls">
           <div class="controls-row">
             <div class="shader-palette">
-              <button class="chip-btn active" onclick="setShader('gold', this); playCyberSound('shader');">Gold Anodized</button>
+              <button class="chip-btn active" onclick="setShader('blue', this); playCyberSound('shader');">Deep Blue</button>
               <button class="chip-btn" onclick="setShader('chrome', this); playCyberSound('shader');">Platinum Chrome</button>
-              <button class="chip-btn" onclick="setShader('neon', this); playCyberSound('shader');">Cyber Neon</button>
+              <button class="chip-btn" onclick="setShader('neon', this); playCyberSound('shader');">Sea Glass</button>
+              <button class="chip-btn" onclick="setShader('gold', this); playCyberSound('shader');">Gold</button>
               <button class="chip-btn" onclick="setShader('wireframe', this); playCyberSound('shader');">Wireframe</button>
               <label class="chip-btn" style="cursor: pointer;" title="Load your Blender exported .glb">
                 📂 Load .GLB
@@ -1707,13 +1878,13 @@
 
       <div class="project-gallery-grid">
         <button class="project-card" type="button"
-          data-full="gold-emblem-study.png"
+          data-full="apk-portfolio-media/gold-emblem-study.png"
           data-alt="Gold outline APK Industries emblem shown in a Blender viewport"
           data-title="Gold Emblem Study"
           data-description="A gold outline emblem modeled in Blender. The grid and guides are from the project viewport."
           onclick="openProjectLightbox(this)">
           <div class="project-image-wrap">
-            <img class="project-image" src="gold-emblem-study.png" alt="Gold outline APK Industries emblem in a Blender viewport" width="637" height="756" loading="lazy" decoding="async">
+            <img class="project-image" src="apk-portfolio-media/gold-emblem-study.png" alt="Gold outline APK Industries emblem in a Blender viewport" width="637" height="756" loading="lazy" decoding="async">
             <span class="project-image-tag">01 // EMBLEM STUDY</span>
           </div>
           <div class="showcase-info">
@@ -1723,13 +1894,13 @@
         </button>
 
         <button class="project-card" type="button"
-          data-full="blue-apk-logo.jpg"
+          data-full="apk-portfolio-media/blue-apk-logo.jpg"
           data-alt="Blue 3D APK Industries logo shown in a Blender viewport"
           data-title="Blue 3D Studio Logo"
           data-description="A blue dimensional APK Industries wordmark modeled in Blender. The grid and guides are from the project viewport."
           onclick="openProjectLightbox(this)">
           <div class="project-image-wrap">
-            <img class="project-image" src="blue-apk-logo.jpg" alt="Blue 3D APK Industries wordmark in a Blender viewport" width="980" height="573" loading="lazy" decoding="async">
+            <img class="project-image" src="apk-portfolio-media/blue-apk-logo.jpg" alt="Blue 3D APK Industries wordmark in a Blender viewport" width="980" height="573" loading="lazy" decoding="async">
             <span class="project-image-tag">02 // 3D WORDMARK</span>
           </div>
           <div class="showcase-info">
@@ -2162,7 +2333,7 @@
           vx: (Math.random() - 0.5) * 0.35,
           vy: (Math.random() - 0.5) * 0.35,
           alpha: Math.random() * 0.6 + 0.2,
-          color: Math.random() > 0.4 ? '#ffd700' : '#00f0ff'
+          color: Math.random() > 0.4 ? '#78aaff' : '#91e2ff'
         });
       }
 
@@ -2196,6 +2367,20 @@
       });
 
       render();
+    }
+
+    function setSiteTheme(theme) {
+      const validThemes = ['black', 'white', 'sea'];
+      const selectedTheme = validThemes.includes(theme) ? theme : 'sea';
+      document.body.dataset.theme = selectedTheme;
+      document.querySelectorAll('.theme-choice').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.theme === selectedTheme));
+      });
+      try {
+        localStorage.setItem('apk_customz_theme', selectedTheme);
+      } catch (error) {
+        // The current selection still applies for this page view if storage is unavailable.
+      }
     }
 
     // BOOT SEQUENCE
@@ -2254,13 +2439,13 @@
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
       scene.add(ambientLight);
 
-      const goldKeyLight = new THREE.DirectionalLight(0xffd700, 3.2);
-      goldKeyLight.position.set(5, 5, 5);
-      scene.add(goldKeyLight);
+      const blueKeyLight = new THREE.DirectionalLight(0x397dff, 3.2);
+      blueKeyLight.position.set(5, 5, 5);
+      scene.add(blueKeyLight);
 
-      const cyanRimLight = new THREE.DirectionalLight(0x00f0ff, 2.4);
-      cyanRimLight.position.set(-5, -5, -2);
-      scene.add(cyanRimLight);
+      const seaRimLight = new THREE.DirectionalLight(0x70dfff, 2.4);
+      seaRimLight.position.set(-5, -5, -2);
+      scene.add(seaRimLight);
 
       const bottomFill = new THREE.DirectionalLight(0xffffff, 0.6);
       bottomFill.position.set(0, -6, 2);
@@ -2353,9 +2538,9 @@
       geometry.center();
 
       currentMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffd700,
+        color: 0x397dff,
         metalness: 0.95,
-        roughness: 0.15
+        roughness: 0.2
       });
 
       logoMesh = new THREE.Mesh(geometry, currentMaterial);
@@ -2416,7 +2601,7 @@
               child.castShadow = true;
               child.receiveShadow = true;
               if (!child.material) {
-                child.material = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9, roughness: 0.2 });
+                child.material = new THREE.MeshStandardMaterial({ color: 0x397dff, metalness: 0.9, roughness: 0.2 });
               }
             }
           });
@@ -2498,14 +2683,16 @@
 
       logoMesh.traverse((child) => {
         if (child.isMesh) {
-          if (type === 'gold') {
+          if (type === 'blue') {
+            child.material = new THREE.MeshStandardMaterial({ color: 0x397dff, metalness: 0.9, roughness: 0.18, emissive: 0x071c52, wireframe: false });
+          } else if (type === 'gold') {
             child.material = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.95, roughness: 0.15, wireframe: false });
           } else if (type === 'chrome') {
             child.material = new THREE.MeshStandardMaterial({ color: 0xf0f4f8, metalness: 0.98, roughness: 0.1, wireframe: false });
           } else if (type === 'neon') {
-            child.material = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x006688, metalness: 0.5, roughness: 0.1, wireframe: false });
+            child.material = new THREE.MeshStandardMaterial({ color: 0x91e2ff, emissive: 0x174e78, metalness: 0.62, roughness: 0.14, wireframe: false });
           } else if (type === 'wireframe') {
-            child.material = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true });
+            child.material = new THREE.MeshBasicMaterial({ color: 0x78aaff, wireframe: true });
           }
         }
       });
@@ -2787,7 +2974,7 @@
         btn.style.color = 'var(--emerald)';
       } else {
         btn.textContent = 'Voice: OFF 🔇';
-        btn.style.borderColor = 'rgba(0, 240, 255, 0.2)';
+        btn.style.borderColor = 'rgba(91, 199, 255, 0.2)';
         btn.style.color = 'var(--text-muted)';
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       }
@@ -2871,6 +3058,17 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      let savedTheme = 'sea';
+      try {
+        savedTheme = localStorage.getItem('apk_customz_theme') || 'sea';
+      } catch (error) {
+        // Continue with the default sea theme if browser storage is unavailable.
+      }
+      document.querySelectorAll('.theme-choice').forEach(button => {
+        button.addEventListener('click', () => setSiteTheme(button.dataset.theme));
+      });
+      setSiteTheme(savedTheme);
+
       initParticles();
       initThreeJS();
       runBootSequence();
